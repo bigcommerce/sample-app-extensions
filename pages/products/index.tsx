@@ -15,10 +15,10 @@ const Products = () => {
     const [direction, setDirection] = useState<TableSortDirection>('ASC');
     const router = useRouter();
     const { error, isLoading, list = [], meta = {} } = useProductList({
-      page: String(currentPage),
-      limit: String(itemsPerPage),
-      ...(columnHash && { sort: columnHash }),
-      ...(columnHash && { direction: direction.toLowerCase() }),
+        page: String(currentPage),
+        limit: String(itemsPerPage),
+        ...(columnHash && { sort: columnHash }),
+        ...(columnHash && { direction: direction.toLowerCase() }),
     });
     const itemsPerPageOptions = [10, 20, 50, 100];
     const tableItems: TableItem[] = list.map(({ id, inventory_level: stock, name, price }) => ({
@@ -55,7 +55,10 @@ const Products = () => {
 
     const renderAction = (id: number): ReactElement => (
         <Dropdown
-            items={[ { content: 'Edit product', onItemClick: () => router.push(`/products/${id}`), hash: 'edit' } ]}
+            items={[
+                { content: 'Edit product', onItemClick: () => router.push(`/products/${id}`), hash: 'edit' },
+                { content: 'AI Description', onItemClick: () => router.push(`/productAppExtension/${id}`), hash: `generate` }
+            ]}
             toggle={<Button iconOnly={<MoreHorizIcon color="secondary60" />} variant="subtle" />}
         />
     );
@@ -83,9 +86,9 @@ const Products = () => {
                     itemsPerPage,
                 }}
                 sortable={{
-                  columnHash,
-                  direction,
-                  onSort,
+                    columnHash,
+                    direction,
+                    onSort,
                 }}
                 stickyHeader
             />

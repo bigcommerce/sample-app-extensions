@@ -47,14 +47,14 @@ export function useProductList(query?: QueryParams) {
     };
 }
 
-export function useProductInfo(pid: number, list?:ListItem[]) {
+export function useProductInfo(pid: number, list?: ListItem[]) {
     const { context } = useSession();
     const params = new URLSearchParams({ context }).toString();
 
-    let product: ListItem; 
+    let product: ListItem;
 
-    if (list?.length) { 
-       product = list.find(item => item.id === pid);
+    if (list?.length) {
+        product = list.find(item => item.id === pid);
     }
 
     // Conditionally fetch product if it doesn't exist in the list (e.g. deep linking)
@@ -65,6 +65,23 @@ export function useProductInfo(pid: number, list?:ListItem[]) {
         isLoading: product ? false : (!data && !error),
         error,
     };
+}
+
+export async function useProductDescriptionUpdate(pid: number, description: string) {
+    const { context } = useSession();
+
+    fetch(`/api/products/${pid}?context=${context}`, {
+        method: 'PUT',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 'description': description })
+    })
+        .then((response) => {
+            if (response.status === 200)
+                console.log("description written!")
+            else
+                console.log("Something failed");
+        });
+
 }
 
 export const useOrder = (orderId: number) => {
