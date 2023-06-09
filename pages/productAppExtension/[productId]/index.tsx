@@ -5,7 +5,6 @@ import Loading from "@components/loading";
 import { useProductInfo } from "@lib/hooks";
 import { useState } from "react";
 import { useSession } from '../../../context/session';
-import { json } from "stream/consumers";
 
 const ProductAppExtension = () => {
     const router = useRouter();
@@ -16,7 +15,7 @@ const ProductAppExtension = () => {
     const typeCapitalized = type?.replace(/^\w/, (c: string) => c.toUpperCase());
     const isVisibleString = isVisible ? 'True' : 'False';
     const [genDesc, setGenDesc] = useState('');
-    const [prompt, setPrompt] = useState('');
+    const [prompt, setPrompt] = useState('What is the capital of Texas?');
     const [isOpen, setIsOpen] = useState(false);
     const [waiting, setWaiting] = useState(false);
     const [saving, setSaving] = useState(false);
@@ -24,14 +23,10 @@ const ProductAppExtension = () => {
     if (isLoading) return <Loading />;
     if (error) return <ErrorMessage error={error} />;
 
-    // Not working?
-    const { GOOGLE_KEY } = process.env;
-    const URL = `https://generativelanguage.googleapis.com/v1beta2/models/chat-bison-001:generateMessage?key=${GOOGLE_KEY}`;
-
     const generateDescription = async () => {
         setWaiting(true);
-        console.log("Asking AI")
-        const json = {
+
+        const promptJson = {
             "prompt": {
                 "messages": [{
                     "content": prompt
@@ -40,19 +35,17 @@ const ProductAppExtension = () => {
             "temperature": 0.1,
             "candidate_count": 1
         }
-        const response = await fetch(URL, {
+        const response = await fetch('/api/ai/message', {
             method: 'POST',
-            body: JSON.stringify(json)
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(promptJson)
         })
-            .then((response) => {
+            .then(async (response) => {
                 if (!response.ok) {
                     console.log('Failed on request to AI');
                 }
-                return response.json();
-            })
-            .then((data) => {
+                const data = await response.json();
                 const newDesc = data.candidates[0].content.replace("/n", "<br/>");
-
                 setGenDesc(newDesc);
             })
             .catch((error) => {
@@ -77,7 +70,7 @@ const ProductAppExtension = () => {
                     console.log("Failed to save new description");
                 }
 
-                // Change data so the screen auto updates
+                // TODO Change data so the screen auto updates
 
                 closeModal();
             })

@@ -67,23 +67,6 @@ export function useProductInfo(pid: number, list?: ListItem[]) {
     };
 }
 
-export async function useProductDescriptionUpdate(pid: number, description: string) {
-    const { context } = useSession();
-
-    fetch(`/api/products/${pid}?context=${context}`, {
-        method: 'PUT',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 'description': description })
-    })
-        .then((response) => {
-            if (response.status === 200)
-                console.log("description written!")
-            else
-                console.log("Something failed");
-        });
-
-}
-
 export const useOrder = (orderId: number) => {
     const { context } = useSession();
     const params = new URLSearchParams({ context }).toString();
