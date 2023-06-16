@@ -15,7 +15,7 @@ const ProductAppExtension = () => {
     const typeCapitalized = type?.replace(/^\w/, (c: string) => c.toUpperCase());
     const isVisibleString = isVisible ? 'True' : 'False';
     const [genDesc, setGenDesc] = useState('');
-    const [prompt, setPrompt] = useState('What is the capital of Texas?');
+    const [prompt, setPrompt] = useState(`Generate a product description for ${name || '____'} for a BigCommerce storefront.`);
     const [isOpen, setIsOpen] = useState(false);
     const [waiting, setWaiting] = useState(false);
     const [saving, setSaving] = useState(false);
@@ -83,7 +83,7 @@ const ProductAppExtension = () => {
     }
 
     const closeModal = () => {
-        setPrompt('');
+        setPrompt(`Generate a product description for ${name || '____'} for a BigCommerce storefront.`);
         setGenDesc('');
         setIsOpen(false);
     }
