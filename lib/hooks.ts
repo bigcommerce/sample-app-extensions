@@ -98,3 +98,17 @@ export const useShippingAndProductsInfo = (orderId: number) => {
         error,
     };
 }
+
+export function useGetAppExtensions() {
+    const { context } = useSession();
+    const params = new URLSearchParams({ context }).toString();
+
+    const { data, error, mutate: mutateList } = useSWR(context ? ['/api/appExtensions/list', params] : null, fetcher);
+
+    return {
+        edges: data,
+        isLoading: !data && !error,
+        error,
+        mutateList,
+    };
+}

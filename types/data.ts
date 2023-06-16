@@ -13,10 +13,22 @@ export interface TableItem {
     stock: number;
 }
 
+export interface AppExtensionTableItem {
+    id: string;
+    name: string;
+    model: string;
+    context: string;
+}
+
 export interface ListItem extends FormData {
     id: number;
 }
 
 export interface StringKeyValue {
     [key: string]: string;
+}
+
+export interface GraphQLQuery {
+    query: string;
+    variables: any;
 }
